@@ -1,4 +1,3 @@
-// postActions.js
 import axios from 'axios';
 
 export const getPostsSuccess = (posts) => ({
@@ -11,26 +10,6 @@ export const getPostsFailure = (error) => ({
   payload: error,
 });
 
-export const getPosts = () => {
-  return async (dispatch) => {
-    try {
-      const response = await axios.get('http://localhost:3000/api/posts');
-
-      if (response.status === 200) {
-        dispatch(getPostsSuccess(response.data));
-      } else {
-        console.log('Error fetching posts');
-        dispatch(getPostsFailure('Error fetching posts'));
-      }
-    } catch (error) {
-      console.log('Error:', error);
-      dispatch(getPostsFailure(error.response.data.error));
-    }
-  };
-};
-
-
-
 export const createPostSuccess = (post) => ({
   type: 'CREATE_POST_SUCCESS',
   payload: post,
@@ -40,24 +19,6 @@ export const createPostFailure = (error) => ({
   type: 'CREATE_POST_FAILURE',
   payload: error,
 });
-
-export const postCreate = (postData) => {
-  return async (dispatch) => {
-    try {
-      const response = await axios.post('http://localhost:3000/api/posts/create', postData);
-
-      if (response.status === 201) {
-        dispatch(createPostSuccess(response.data));
-      } else {
-        console.log('Error creating post');
-        dispatch(createPostFailure('Error creating post'));
-      }
-    } catch (error) {
-      console.log('Error:', error);
-      dispatch(createPostFailure(error.response.data.error));
-    }
-  };
-};
 
 export const updatePostStatusSuccess = (message) => ({
   type: 'UPDATE_POST_STATUS_SUCCESS',
@@ -69,24 +30,82 @@ export const updatePostStatusFailure = (error) => ({
   payload: error,
 });
 
+export const getPosts = () => {
+  return async (dispatch) => {
+    axios
+      .get('http://localhost:3000/api/posts')
+      .then((response) => {
+        dispatch(getPostsSuccess(response.data));
+      })
+      .catch((err) => {
+        console.log('Error:', err);
+        dispatch(getPostsFailure(err.response.data.error));
+      });
+  }
+}
+
+export const postCreate = (postData, navigate) => {
+  return (dispatch) => {
+    axios
+      .post('http://localhost:3000/api/posts/create', postData)
+      .then((response) => {
+        console.log('Registration Success:', response.data);
+        dispatch(createPostSuccess(response.data));
+        navigate('/post');
+      })
+      .catch((err) => {
+        console.log('Registration Error:', err);
+        dispatch(createPostFailure(err.response.data.error));
+      });
+  };
+};
 
 export const updatePostStatus = (id, currentStatus) => {
   return async (dispatch) => {
-    try {
-      // Calculate the new status as the inverse of the current status
-      const newStatus = currentStatus === 0 ? 1 : 0;
+    const newStatus = currentStatus === 0 ? 1 : 0;
+    axios
+      .put(`http://localhost:3000/api/posts/${id}/status`, { status: newStatus })
+      .then((response) => {
+        dispatch(updatePostStatusSuccess(response.data.message));
+      })
+      .catch((err) => {
+        console.log('Error:', err);
+        dispatch(updatePostStatusFailure(err.response.data.error));
+      })
+  }
+};
 
-      const response = await axios.put(`http://localhost:3000/api/posts/${id}/status`, { status: newStatus });
+
+export const fetchPostRequest = () => ({
+  type: 'FETCH_POST_REQUEST',
+});
+
+export const fetchPostSuccess = (post) => ({
+  type: 'FETCH_POST_SUCCESS',
+  payload: post,
+});
+
+export const fetchPostFailure = (error) => ({
+  type: 'FETCH_POST_FAILURE',
+  payload: error,
+});
+
+export const fetchPostById = (id) => {
+  return async (dispatch) => {
+    dispatch(fetchPostRequest());
+
+    try {
+      const response = await axios.get(`http://localhost:3000/api/posts/${id}`);
 
       if (response.status === 200) {
-        dispatch(updatePostStatusSuccess(response.data.message));
+        dispatch(fetchPostSuccess(response.data));
       } else {
-        console.log('Error updating post status');
-        dispatch(updatePostStatusFailure('Error updating post status'));
+        console.log('Failed to fetch post:', response.status);
+        dispatch(fetchPostFailure('Failed to fetch post'));
       }
     } catch (error) {
-      console.log('Error:', error);
-      dispatch(updatePostStatusFailure(error.response.data.error));
+      console.error('Error fetching post:', error);
+      dispatch(fetchPostFailure('Failed to fetch post'));
     }
   };
 };

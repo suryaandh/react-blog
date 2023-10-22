@@ -31,26 +31,21 @@ export const removeToken = () => (dispatch) => {
   });
 };
 
-
 export const loginUser = (credentials, navigate) => {
   return async (dispatch) => {
-    try {
-      const response = await axios.post('http://localhost:3000/api/users/login', credentials);
-
-      if (response.status === 200) {
+    axios
+      .post('http://localhost:3000/api/users/login', credentials)
+      .then((response) => {
         dispatch(loginSuccess(response.data.user, response.data.token));
         localStorage.setItem('token', response.data.token);
         navigate('/');
-      } else {
-        console.log('Error logging in');
-      }
-    } catch (error) {
-      console.log('Login Error:', error);
-      dispatch(loginFailure(error.response.data.error));
-    }
+      })
+      .catch((err) => {
+        console.log('Login Error:', err);
+        dispatch(loginFailure(err.response.data.error));
+      });
   };
-};
-
+}
 
 export const registerSuccess = (user, token) => (dispatch) => {
   localStorage.setItem('token', token);

@@ -1,31 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchPostById } from '../actions/postActions';
 import { formatISO9075 } from 'date-fns';
 
 const DetailPostPage = () => {
-  // State untuk menyimpan data posting
-  const [post, setPost] = useState(null);
+  const dispatch = useDispatch();
   const { id } = useParams();
+  const post = useSelector((state) => state.post.post);
+  const loading = useSelector((state) => state.post.loading);
+  const error = useSelector((state) => state.post.error);
 
-  // Gunakan useEffect untuk memanggil API saat komponen dimuat
   useEffect(() => {
-    async function fetchPost() {
-      try {
-        const response = await fetch(`http://localhost:3000/api/posts/${id}`);
+    dispatch(fetchPostById(id));
+  }, [dispatch, id]);
 
-        if (response.ok) {
-          const data = await response.json();
-          setPost(data);
-        } else {
-          console.error('Failed to fetch post:', response.status);
-        }
-      } catch (error) {
-        console.error('Error fetching post:', error);
-      }
-    }
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
-    fetchPost();
-  }, [id]);
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
 
   return (
     <div>
@@ -33,14 +29,14 @@ const DetailPostPage = () => {
         <>
           <h1>{post.title}</h1>
           <time>Published on: {formatISO9075(new Date(post.createdAt))}</time>
-          <div className='author'>Author: {post.author}</div>
-          <div className='image'>
+          <div className="author">Author: {post.author}</div>
+          <div className="image">
             <img src={post.image} alt={post.title} />
           </div>
-          <div className='content' dangerouslySetInnerHTML={{ __html: post.content }} />
+          <div className="content" dangerouslySetInnerHTML={{ __html: post.content }} />
         </>
       ) : (
-        <p>Loading...</p>
+        <p>Post not found</p>
       )}
     </div>
   );

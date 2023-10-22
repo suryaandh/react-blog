@@ -1,8 +1,10 @@
 const initialState = {
   posts: [],
+  post: null,
   error: null,
   creating: false,
   updating: false,
+  loading: false,
 };
 
 const postReducer = (state = initialState, action) => {
@@ -46,6 +48,28 @@ const postReducer = (state = initialState, action) => {
       return {
         ...state,
         updating: false,
+        error: action.payload,
+      };
+
+    case 'FETCH_POST_REQUEST':
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+
+    case 'FETCH_POST_SUCCESS':
+      return {
+        ...state,
+        post: action.payload,
+        loading: false,
+        error: null,
+      };
+
+    case 'FETCH_POST_FAILURE':
+      return {
+        ...state,
+        loading: false,
         error: action.payload,
       };
 
