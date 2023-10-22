@@ -53,9 +53,7 @@ const AboutPage = () => {
           <p>
             After graduating with a degree in Informatics Engineering, I decided
             to pursue my passion for programming. I enrolled in a coding bootcamp
-            and course and learned full-stack development. My favorite part of programming is the
-            problem-solving aspect. I love the feeling of finally figuring out a
-            solution to a problem. My core stack is Flutter and Firebase.
+            and course and learned full-stack development. My favorite part of programming is the problem-solving aspect. I love the feeling of finally figuring out a solution to a problem. My core stack is Flutter and Firebase.
           </p>
           <a href="/CV.pdf" download>Download CV</a>
         </div>

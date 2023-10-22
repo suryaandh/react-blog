@@ -4,7 +4,13 @@ import { registerUser } from '../actions/authActions';
 import { useNavigate } from 'react-router-dom';
 
 const RegisterPage = () => {
-  const [credentials, setCredentials] = useState({ email: '', password: '', name: '' });
+  const [credentials, setCredentials] = useState({
+    email: '',
+    password: '',
+    name: '',
+    image: '',
+    description: ''
+  });
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const error = useSelector((state) => state.auth.error);
@@ -46,6 +52,19 @@ const RegisterPage = () => {
           name='password'
           placeholder="Password"
           value={credentials.password}
+          onChange={handleInputChange}
+        />
+        <input
+          type='text'
+          name='image'
+          placeholder='Image URL'
+          value={credentials.image}
+          onChange={handleInputChange}
+        />
+        <textarea
+          name='description'
+          placeholder='Description'
+          value={credentials.description}
           onChange={handleInputChange}
         />
         <button onClick={handleRegister}>Register</button>

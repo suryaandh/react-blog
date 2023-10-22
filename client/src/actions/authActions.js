@@ -23,6 +23,11 @@ export const loginFailure = (error) => ({
   payload: error,
 });
 
+export const setUser = (userData) => ({
+  type: 'SET_USER',
+  payload: userData,
+});
+
 export const removeToken = () => (dispatch) => {
   localStorage.removeItem('token');
 
@@ -38,6 +43,8 @@ export const loginUser = (credentials, navigate) => {
       .then((response) => {
         dispatch(loginSuccess(response.data.user, response.data.token));
         localStorage.setItem('token', response.data.token);
+        // const user = decodeToken(response.data.token);
+        // dispatch(setUser(user));
         navigate('/');
       })
       .catch((err) => {
