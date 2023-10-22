@@ -12,6 +12,7 @@ import DetailPostPage from './pages/DetailPostPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import CreateNewPostPage from './pages/CreateNewPostPage';
+import OverviewPage from './pages/OverviewPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ function App() {
           <Route path={'/posts/:id'} element={<DetailPostPage />} />
           <Route path={'/about'} element={<AboutPage />} />
           <Route path={'/contact'} element={<ContactPage />} />
+          <Route path={'/overview'} element={<OverviewPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

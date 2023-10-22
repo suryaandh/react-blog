@@ -44,6 +44,35 @@ header nav a.logout{
   cursor: pointer;
 }
 
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  color: #333;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
 div.post{
   display: grid;
   grid-template-columns: 1fr;
@@ -51,7 +80,22 @@ div.post{
   margin-bottom: 30px;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (max-width: 768px) {
+  /* header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  header a.logo {
+    margin-bottom: 20px;
+  }
+
+  header nav {
+    flex-direction: column;
+    gap: 10px;
+  } */
+
   div.post{
     grid-template-columns: 0.9fr  1.1fr;
   }
@@ -93,7 +137,7 @@ div.login, div.register{
   margin: 0 auto;
 }
 
-input{
+input, textarea{
   display: block;
   margin-bottom: 5px;
   width: 100%;
@@ -113,7 +157,7 @@ button{
   padding: 7px 0;
 }
 
-form.login h1, form.register h1{
+form.login h1, div.register h1{
   text-align: center;
 }
 
@@ -194,7 +238,64 @@ div.post-page div.content p{
 .about-box p{
   font-size: 1.2rem;
   line-height: 1.6rem;
+  margin-bottom: 2rem;
 }
+
+.about-box a{
+  width: 200px;
+  height: auto;
+  color: #FFF;
+  background-color: #333;
+  padding: 15px 45px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.about-box a:hover{
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #aaa;
+}
+
+.work-experience {
+  flex: 2;
+  padding: 20px;
+}
+
+h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.experience {
+  padding: 20px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+  margin-bottom: 20px;
+}
+
+.experience:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+h3 {
+  font-size: 22px;
+  margin: 0;
+  color: #333;
+}
+
+p {
+  margin: 10px 0;
+  color: #777;
+  line-height: 1.4;
+}
+
 
 /* .status-check {
   background-color: #222;
@@ -235,4 +336,55 @@ div.post-page div.content p{
   background: black;
   color: white;
   font-weight: 500;
+}
+
+.contact-us{
+  width: 80%;
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+.contact-us h1{
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+form input,
+form textarea {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  color: #333;
+  background-color: #f7f7f7;
+}
+
+form input:focus,
+form textarea:focus {
+  outline: none;
+}
+
+form button{
+  display: block;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #333;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+form button:hover{
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #555;
 }
