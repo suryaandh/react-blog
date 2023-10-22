@@ -1,105 +1,55 @@
-import React, { useState } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import { useDispatch } from 'react-redux';
-import { postCreate } from '../actions/postActions';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getPosts, updatePostStatus } from '../actions/postActions';
+import Post from '../components/Post';
 
 const PostPage = () => {
-  const [title, setTitle] = useState('');
-  const [summary, setSummary] = useState('');
-  const [content, setContent] = useState('');
-  const [image, setImage] = useState('');
-
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const posts = useSelector((state) => state.post.posts);
 
-  const token = localStorage.getItem('token');
-  let author = null;
+  useEffect(() => {
+    dispatch(getPosts());
+  }, [dispatch]);
 
-  if (token) {
-    console.log('Token:', token);
+  const [buttonTexts, setButtonTexts] = useState({});
 
-    const tokenParts = token.split('.');
-    if (tokenParts.length === 3) {
-      const payload = JSON.parse(atob(tokenParts[1]));
-      console.log('Decoded Payload:', payload);
-      author = payload.name;
-    }
-  }
+  const handleUpdateStatus = (id, currentStatus) => {
+    const newStatus = currentStatus === 1 ? 0 : 1;
+    dispatch(updatePostStatus(id, newStatus));
 
-  async function createNewPost(e) {
-    e.preventDefault();
-
-    if (author) {
-      const postData = {
-        title: title,
-        summary: summary,
-        content: content,
-        image: image,
-        author: author,
-      };
-
-      await dispatch(postCreate(postData, navigate));
-    } else {
-      console.error('User is not logged in or author is not defined.');
-    }
-  }
-
-
-  const modules = {
-    toolbar: [
-      [{ 'header': [1, 2, false] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
-      ['link', 'image'],
-      ['clean']
-    ],
+    setButtonTexts({
+      ...buttonTexts,
+      [id]: newStatus === 1 ? 'Draft' : 'Publish',
+    });
   };
 
-  const formats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike', 'blockquote',
-    'list', 'bullet', 'indent',
-    'link', 'image'
-  ];
-
-
   return (
-    <>
-      <div >
-        <input
-          type='text'
-          name='title'
-          placeholder={'Title'}
-          value={title}
-          onChange={e => setTitle(e.target.value)}
-        />
-
-        <input
-          type='text'
-          name='summary'
-          placeholder={'Summary'}
-          value={summary}
-          onChange={e => setSummary(e.target.value)}
-        />
-
-        <input
-          type='url'
-          name='image'
-          placeholder={'Image'}
-          value={image}
-          onChange={e => setImage(e.target.value)}
-        />
-
-        <ReactQuill value={content}
-          onChange={newValue => setContent(newValue)}
-          modules={modules}
-          formats={formats}
-        />
-        <button style={{ marginTop: '5px' }} onClick={createNewPost}>Create post</button>
+    <div>
+      <div className="create-post">
+        <Link to="/create" style={{ textDecoration: 'none' }}>
+          <button className="create-button">Create Post</button>
+        </Link>
       </div>
-    </>
+      {posts.map((post) => (
+        <div key={post.id}>
+          <Link className="content-post" to={`/posts/${post.id}`}>
+            <Post
+              title={post.title}
+              author={post.author}
+              time={post.updatedAt}
+              summary={post.summary}
+              image={post.image}
+            />
+          </Link>
+          <div className='status-check'>
+            <button onClick={() => handleUpdateStatus(post.id, post.status)}>
+              {buttonTexts[post.id] || (post.status === 1 ? 'Draft' : 'Publish')}
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
   );
 };
 

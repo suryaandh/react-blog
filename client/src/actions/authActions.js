@@ -31,19 +31,6 @@ export const removeToken = () => (dispatch) => {
   });
 };
 
-export const registerSuccess = (user, token) => (dispatch) => {
-  localStorage.setItem('token', token);
-
-  dispatch({
-    type: 'REGISTER_SUCCESS',
-    payload: { user, token },
-  });
-};
-
-export const registerFailure = (error) => ({
-  type: 'REGISTER_FAILURE',
-  payload: error,
-});
 
 export const loginUser = (credentials, navigate) => {
   return async (dispatch) => {
@@ -63,6 +50,21 @@ export const loginUser = (credentials, navigate) => {
     }
   };
 };
+
+
+export const registerSuccess = (user, token) => (dispatch) => {
+  localStorage.setItem('token', token);
+
+  dispatch({
+    type: 'REGISTER_SUCCESS',
+    payload: { user, token },
+  });
+};
+
+export const registerFailure = (error) => ({
+  type: 'REGISTER_FAILURE',
+  payload: error,
+});
 
 export const registerUser = (credentials) => {
   return (dispatch) => {

@@ -11,7 +11,7 @@ const Post = ({ title, author, time, summary, image }) => {
       <div className="texts">
         <h2>{title}</h2>
         <p className="info">
-          <Link to={'/'} className="author">{author}</Link>
+          <span className="author">{author}</span>
           <time>{formatISO9075(new Date(time), 'MMM d, yyyy HH:mm')}</time>
         </p>
         <p className="summary">{summary}</p>
