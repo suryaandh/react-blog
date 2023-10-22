@@ -1,21 +1,23 @@
-import React from 'react'
+import React from 'react';
+import { formatISO9075 } from 'date-fns';
+import { Link } from 'react-router-dom';
 
-const Post = () => {
+const Post = ({ title, author, time, summary, image }) => {
   return (
     <div className="post">
       <div className="image">
-        <img src="https://techcrunch.com/wp-content/uploads/2023/03/GettyImages-1462188043-e1686340799615.jpg?w=1390&crop=1" alt='adad' />
+        <img src={image} alt={title} />
       </div>
       <div className="texts">
-        <h2>ChatGPT: Everything you need to know about the AI-powered chatbot</h2>
+        <h2>{title}</h2>
         <p className="info">
-          <a href='/' className="author">Joh Doe</a>
-          <time>2023-10-18 19.06</time>
+          <Link to={'/'} className="author">{author}</Link>
+          <time>{formatISO9075(new Date(time), 'MMM d, yyyy HH:mm')}</time>
         </p>
-        <p className="summary">ChatGPT, OpenAI’s text-generating AI chatbot, has taken the world by storm. It’s able to write essays, code and more given short text prompts, hyper-charging productivity. But it also has a more…nefarious side.</p>
+        <p className="summary">{summary}</p>
       </div>
     </div>
-  )
+  );
 }
 
-export default Post
+export default Post;
