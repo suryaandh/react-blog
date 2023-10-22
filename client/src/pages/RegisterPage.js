@@ -4,7 +4,7 @@ import { registerUser } from '../actions/authActions';
 import { useNavigate } from 'react-router-dom';
 
 const RegisterPage = () => {
-  const [credentials, setCredentials] = useState({ email: '', password: '' }); // Menggunakan email dan password
+  const [credentials, setCredentials] = useState({ email: '', password: '', name: '' });
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const error = useSelector((state) => state.auth.error);
@@ -23,25 +23,34 @@ const RegisterPage = () => {
   };
 
   return (
-    <div>
-      <h1>Register</h1>
-      {error && <div className="error">{error}</div>}
-      <input
-        type="text"
-        name='email'
-        placeholder="Email"
-        value={credentials.email}
-        onChange={handleInputChange}
-      />
-      <input
-        type="password"
-        name='password'
-        placeholder="Password"
-        value={credentials.password}
-        onChange={handleInputChange}
-      />
-      <button onClick={handleRegister}>Register</button>
-    </div>
+    <>
+      <div className='register'>
+        <h1>Register</h1>
+        {error && <div className="error">{error}</div>}
+        <input
+          type="text"
+          name='name'
+          placeholder="Name"
+          value={credentials.name}
+          onChange={handleInputChange}
+        />
+        <input
+          type="text"
+          name='email'
+          placeholder="Email"
+          value={credentials.email}
+          onChange={handleInputChange}
+        />
+        <input
+          type="password"
+          name='password'
+          placeholder="Password"
+          value={credentials.password}
+          onChange={handleInputChange}
+        />
+        <button onClick={handleRegister}>Register</button>
+      </div>
+    </>
   );
 };
 

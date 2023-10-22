@@ -20,11 +20,16 @@ const Header = () => {
       <nav>
         {token ? (
           <>
-            <Link to="/create">New post</Link>
-            <a className='logout' onClick={logout}>Logout</a>
+            <Link to="/">Home</Link>
+            <Link to="/about">About</Link>
+            <Link to="/">Contact</Link>
+            <Link to="/post">Post</Link>
+            <Link className='logout' onClick={logout}>Logout</Link>
           </>
         ) : (
           <>
+            {/* <Link to="/">About</Link>
+            <Link to="/">Contact</Link> */}
             <Link to="/login">Login</Link>
             <Link to="/register">Register</Link>
           </>

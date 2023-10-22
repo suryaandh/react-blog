@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const loginSuccess = (user, token) => (dispatch) => {
-  document.cookie = `token=${token}; path=/;`;
+  localStorage.setItem('token', token);
 
   dispatch({
     type: 'LOGIN_SUCCESS',
@@ -10,6 +10,8 @@ export const loginSuccess = (user, token) => (dispatch) => {
 };
 
 export const setToken = (token) => (dispatch) => {
+  localStorage.setItem('token', token);
+
   dispatch({
     type: 'SET_TOKEN',
     payload: token,
@@ -21,17 +23,16 @@ export const loginFailure = (error) => ({
   payload: error,
 });
 
-export const removeToken = (error) => (dispatch) => {
-  document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+export const removeToken = () => (dispatch) => {
+  localStorage.removeItem('token');
 
   dispatch({
     type: 'REMOVE_TOKEN',
-    payload: error
   });
 };
 
 export const registerSuccess = (user, token) => (dispatch) => {
-  document.cookie = `token=${token}; path=/;`;
+  localStorage.setItem('token', token);
 
   dispatch({
     type: 'REGISTER_SUCCESS',
@@ -44,23 +45,24 @@ export const registerFailure = (error) => ({
   payload: error,
 });
 
+export const loginUser = (credentials, navigate) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.post('http://localhost:3000/api/users/login', credentials);
 
-export const loginUser = (credential, navigate) => {
-  return (dispatch) => {
-    axios
-      .post('http://localhost:3000/api/users/login', credential)
-      .then((response) => {
-        console.log('Login Success:', response.data);
+      if (response.status === 200) {
         dispatch(loginSuccess(response.data.user, response.data.token));
-        setCookie('token', response.data);
+        localStorage.setItem('token', response.data.token);
         navigate('/');
-      })
-      .catch((err) => {
-        console.log('Login Error:', err);
-        dispatch(loginFailure(err.response.data.error));
-      });
-  }
-}
+      } else {
+        console.log('Error logging in');
+      }
+    } catch (error) {
+      console.log('Login Error:', error);
+      dispatch(loginFailure(error.response.data.error));
+    }
+  };
+};
 
 export const registerUser = (credentials) => {
   return (dispatch) => {
@@ -72,13 +74,7 @@ export const registerUser = (credentials) => {
       })
       .catch((err) => {
         console.log('Registration Error:', err);
-        dispatch(loginFailure(err.response.data.error));
+        dispatch(registerFailure(err.response.data.error));
       });
-  }
-};
-
-function setCookie(name, value) {
-  const expires = new Date();
-  expires.setMinutes(expires.getMinutes() + 30);
-  document.cookie = `${name}=${value}; expires=${expires.toUTCString()}; path=/;`;
+  };
 }
