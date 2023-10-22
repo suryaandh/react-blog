@@ -27,7 +27,14 @@ class AuthController {
 
 
       if (passwordMatch) {
-        const token = createToken({ id: user.id, username: user.username });
+        const token = createToken({
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image,
+          description: user.description,
+          address: user.address
+        });
         res.status(200).json({ token });
       } else {
         res.status(401).json({ message: 'Login failed' });
@@ -41,7 +48,7 @@ class AuthController {
   static async register(req, res) {
     const { email, password, name, dateOfBirth, image, description, address } = req.body;
 
-    if (!email || !password) {
+    if (!email || !password || !name) {
       return res.status(400).json({ message: 'Email and password are required' });
     }
 
